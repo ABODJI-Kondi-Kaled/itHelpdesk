@@ -106,11 +106,11 @@ admin.site.register(User, UserAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = [
-        'user.email',
+        'user',
         'bio'
     ]
 
-    search_fields='user.email'
+    search_fields=['user']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

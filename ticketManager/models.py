@@ -14,10 +14,10 @@ class Ticket(models.Model):
     class Meta:
         verbose_name = _('ticket')
         verbose_name_plural = _('tickets')
-        ordering = '-created_at'
+        ordering = ('-created_at',)
         permissions = [
             ('can_change_status_only',_('Can only edit status of the ticket. reserved For Technitians')),
-            ('can_change_title_desc_only', _('Can only edit the title and description. For regular employe'))
+            ('can_change_title_desc_only', _('Can only edit the title and description. For regular employe')),
             ('can_assign_technician', _('Can chose who is in charge of the ticket. For the admin only'))
 
         ] 
