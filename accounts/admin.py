@@ -11,7 +11,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 # Traduction
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import Profile, User
 
 # Creating a custom admin Form
 
@@ -101,8 +101,39 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
     )
+
+admin.site.register(User, UserAdmin)   
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = [
+        'user.email',
+        'bio'
+    ]
+
+    search_fields='user.email'
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
     
-admin.site.register(User, UserAdmin)
+    def has_add_permission(self, request):
+        
+            return request.user.is_superuser
+        
+    def has_change_permission(self, request, obj = None):
+        if request.user.is_superuser or request.user == obj.user:
+            return True
+        if not obj:
+            return True # Allow view of the changelist
+        
+    def has_view_permission(self, request, obj = None):
+        return self.has_change_permission(request, obj)
     
+    def has_delete_permission(self, request, obj = None):
+        return False # Block deletion for all accounts
+
+admin.site.register(Profile, ProfileAdmin)
 
 

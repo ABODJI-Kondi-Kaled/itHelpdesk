@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 # Creating Custom user model
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -79,4 +80,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    
+
+class Profile(models.Model):
+    class Meta:
+        verbose_name = 'profile'
+        verbose_name_plural = 'profiles'
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+
+    bio = models.TextField(_('Bio'), max_length=600, blank=True)
+    picture = models.ImageField(_('Profile'), upload_to='media/profiles', blank=True)
+
+
+    def __str__(self):
+        return self.user.email
